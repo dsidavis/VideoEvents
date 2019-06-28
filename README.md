@@ -1,10 +1,17 @@
 
-R CMD INSTALL VideoEvents
-
+To install the package
+```
+devtools::install_github("dsidavis/VideoEvents")
+```
+Or git clone the repository and install it locally - 
+from within in R
+```
 install.packages("VideoEvents", repos = ".")
-
-From github
-devtools::github_install()
+```
+or on the shell command line
+```
+R CMD INSTALL VideoEvents
+```
 
 
 Load the package to get the 3 functions:
