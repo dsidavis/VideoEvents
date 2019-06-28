@@ -20,7 +20,7 @@ events2DataFrame =
 function(ev, f = NA)
 {
     if(length(ev) == 0) 
-        return(data.frame(file = f, start = NA, end = NA))
+        return(data.frame(file = f, start = as.POSIXct(NA), end = as.POSIXct(NA)))
 
     tm = as.POSIXct(strptime(strsplit(ev, ",")[[1]], "%H:%M:%S"))
     numEvents = length(tm)/2
