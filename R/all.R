@@ -33,10 +33,19 @@ function(ev, f = NA)
 
 processVideos =
     # To run in parallel on a machine  mcmapply
-function(dir, filenames = list.files(dir, recursive = TRUE, full.names = TRUE), ...)
+    # any additional arguments via ... go to dvrScan()
+    # If mc.cores
+function(dir, filenames = list.files(dir, recursive = TRUE, full.names = TRUE), mc.cores = 1, ...)
 {
-    ev = lapply(filenames, dvrScan, ...)
-    dd = mapply(events2DataFrame, ev, filenames, SIMPLIFY = FALSE)
+    dd = if(mc.cores > 1)
+            dd = parallel::mcmapply(function(f)
+                                        events2DataFrame(dvrScan(f, ...)),
+                                    filenames, SIMPLIFY = FALSE, mc.cores = mc.cores)
+         else {
+            ev = lapply(filenames, dvrScan, ...)
+            dd = mapply(events2DataFrame, ev, filenames, SIMPLIFY = FALSE)
+         }
+    
     allEvents = do.call(rbind, dd)
     allEvents$duration = allEvents$end - allEvents$start
 
