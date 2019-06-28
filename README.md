@@ -33,5 +33,11 @@ This video has no events, so we end up with a row with NAs.
 To process all the videos in a directory and its subdirectories and convert the events to a data
 frame all in one step, use the processVideos() function:
 ```
-processVideos("inst", exec = "python3 ../DVR-Scan-1.0.1/dvr-scan.py")
+i = processVideos("inst")
+```
+
+You can run this using more than one CPU/core so that they process each video in parallel.
+You specify how many cores to use with num.cores = n, e.g.,
+```
+i = processVideos("inst", mc.cores = 3
 ```
