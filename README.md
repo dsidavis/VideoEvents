@@ -1,3 +1,8 @@
+A simple way to run DVR-scan to analyze videos for motion events and get the results back into R.
+We run the pythong code for DVR-scan from R.
+
+DVR-scan: https://dvr-scan.readthedocs.io/en/latest/
+
 
 To install the package
 ```
