@@ -1,0 +1,6 @@
+Package: VideoEvents
+Description: Use DVR-Scan to process videos and collect event information in R
+Title: Process videos to get motion event start, end and duration
+Author: Duncan Temple Lang, Sabrina Mederos, Mikel Delgado
+Maintainer: Duncan Temple Lang <duncan@r-project.org>
+Version: 0.1-0
