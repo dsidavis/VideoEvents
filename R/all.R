@@ -1,17 +1,24 @@
 dvrScan =
-    function(f, bin = TRUE, exec = if(bin) "dvr-scan" else "python3 dvr-scan.py") {
-         tt = system(sprintf('%s -so -i "%s"', exec, f), intern = TRUE)
-         ans = tt[length(tt)]
-         if(grepl("No motion", ans))
-             return(character())
-         else
-             ans
-     }
+    #
+    # dvrScan(system.file("videos/Other/54.mp4", package = "VideoEvents")
+    # dvrScan("inst/videos/Other/54.mp4", , "python3 ../DVR-Scan-1.0.1/dvr-scan.py")
+    #
+    #
+function(f, bin = TRUE, exec = if(bin) "dvr-scan" else "python3 dvr-scan.py", verbose = FALSE)
+{
+    if(verbose)
+       message("DVR-Scan for ", f)
+    tt = system(sprintf('%s -so -i "%s"', exec, f), intern = TRUE)
+    ans = tt[length(tt)]
+    if(grepl("No motion", ans))
+        return(character())
+    else
+        ans
+}
 
-filenames = list.files(pattern = "Pexels_.*", recursive = TRUE)
-ev = lapply(filenames, dvrScan)
-
-dd = mapply(function(f, ev) {
+events2DataFrame =
+function(ev, f = NA)
+{
     if(length(ev) == 0) 
         return(data.frame(file = f, start = NA, end = NA))
 
@@ -21,12 +28,20 @@ dd = mapply(function(f, ev) {
                start = tm[ seq(1, length = numEvents, by = 2) ],
                end = tm[ seq(1, length = numEvents, by = 2) + 1 ],
                stringsAsFactors = FALSE)
-       }, filenames, ev, SIMPLIFY = FALSE)
+   }
 
-allEvents = do.call(rbind, dd)
 
-allEvents$duration = allEvents$end - allEvents$start
+processVideos =
+    # To run in parallel on a machine  mcmapply
+function(dir, filenames = list.files(dir, recursive = TRUE, full.names = TRUE), ...)
+{
+    ev = lapply(filenames, dvrScan, ...)
+    dd = mapply(events2DataFrame, ev, filenames, SIMPLIFY = FALSE)
+    allEvents = do.call(rbind, dd)
+    allEvents$duration = allEvents$end - allEvents$start
 
-#To run in parallel on a machine  mcmapply
+    allEvents
+}
+
 
 
